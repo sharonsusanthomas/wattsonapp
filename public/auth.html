@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up | Wattson</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <nav class="container">
+      <a href="index.html" class="logo"><span class="logo-icon">⚡</span> Wattson</a>
+    </nav>
+  </header>
+
+  <main class="container page active" style="padding-top:120px; max-width:500px;">
+    <!-- Sign Up -->
+    <div class="contact-form" id="signupForm">
+      <h2>Create Account</h2>
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" id="signupName" class="form-input" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" id="signupEmail" class="form-input" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" id="signupPassword" class="form-input" required>
+      </div>
+      <button class="btn btn-primary" onclick="signup()">Sign Up</button>
+      <p>Already have an account? <a href="signin.html">Sign In</a></p>
+    </div>
+
+    <div id="notification" class="notification"></div>
+  </main>
+
+  <script>
+    const API_URL = "http://localhost:5000/api";
+
+    function showNotification(message, type="success") {
+      const notif = document.getElementById("notification");
+      notif.textContent = message;
+      notif.className = "notification show " + type;
+      setTimeout(() => notif.className = "notification", 3000);
+    }
+
+    async function signup() {
+      const fullName = document.getElementById("signupName").value;
+      const email = document.getElementById("signupEmail").value;
+      const password = document.getElementById("signupPassword").value;
+
+      const res = await fetch(`${API_URL}/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fullName, email, password })
+      });
+
+      const data = await res.json();
+      showNotification(data.message, data.success ? "success" : "error");
+
+      if (data.success) {
+        setTimeout(() => window.location.href = "signin.html", 1500);
+      }
+    }
+  </script>
+</body>
+</html>

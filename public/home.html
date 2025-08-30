@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Wattson Energy Management</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="#" class="logo" onclick="showPage('home')">
+                <div class="logo-icon">⚡</div>
+                Wattson
+            </a>
+            <ul class="nav-links">
+                <li><a href="home.html" class="active">Home</a></li>
+                <li><a href="features.html" class="active">Features</a></li>
+                <li><a href="pricing.html" class="active">Pricing</a></li>
+                <li><a href="api.html" class="active">API</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+            </ul>
+            <div class="nav-cta">
+                <div class="nav-cta">
+                <a href="signin.html" class="btn btn-outline">Sign In</a>
+                <a href="auth.html" class="btn btn-primary">Get Started</a>
+            </div>
+            </div>
+            <div class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Energy Management <span class="highlight">Made Simple</span></h1>
+                    <p>Monitor, control, and optimize your facility's energy consumption with our enterprise-grade IoT platform. Real-time insights, automated controls, and comprehensive analytics.</p>
+                    
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <span class="stat-value" id="liveDevices">1,247</span>
+                            <span class="stat-label">Connected Devices</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value" id="energySaved">34%</span>
+                            <span class="stat-label">Energy Reduction</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value" id="monthlySavings">₹2.4M</span>
+                            <span class="stat-label">Monthly Savings</span>
+                        </div>
+                    </div>
+
+                    <div class="hero-cta">
+                        <a href="#" class="btn btn-primary btn-large" onclick="startTrial()">Start Free Trial</a>
+                        <a href="#" class="btn btn-outline btn-large" onclick="requestDemo()">Request Demo</a>
+                    </div>
+                </div>
+
+                <div class="dashboard-mockup">
+                    <div class="mockup-header">
+                        <div class="mockup-title">Energy Dashboard</div>
+                        <div class="status-badge">
+                            <div class="status-dot"></div>
+                            Live Data
+                        </div>
+                    </div>
+                    
+                    <div class="chart-area">
+                        <canvas id="heroChart" width="400" height="200"></canvas>
+                    </div>
+                    
+                    <div class="devices-grid">
+                        <div class="device-item">
+                            <div class="device-icon">🏢</div>
+                            <div class="device-name">Main Office</div>
+                            <div class="device-status status-on">Active</div>
+                        </div>
+                        <div class="device-item">
+                            <div class="device-icon">💡</div>
+                            <div class="device-name">Conference</div>
+                            <div class="device-status status-auto">Auto</div>
+                        </div>
+                        <div class="device-item">
+                            <div class="device-icon">❄️</div>
+                            <div class="device-name">HVAC Zone 1</div>
+                            <div class="device-status status-on">Active</div>
+                        </div>
+                        <div class="device-item">
+                            <div class="device-icon">🚪</div>
+                            <div class="device-name">Corridor</div>
+                            <div class="device-status status-off">Standby</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+     <script>
+        let heroChart;
+        let animationIntervals = [];
+
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeHeroChart();
+            startLiveDataUpdates();
+        });
+
+        function initializeHeroChart() {
+            const ctx = document.getElementById('heroChart');
+            if (ctx) {
+                // Generate initial data
+                const initialData = generateChartData();
+                
+                heroChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['12:00', '12:15', '12:30', '12:45', '13:00', '13:15', '13:30'],
+                        datasets: [{
+                            label: 'Energy Consumption (kW)',
+                            data: initialData,
+                            borderColor: '#2563eb',
+                            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            pointBackgroundColor: '#2563eb',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                grid: {
+                                    color: '#e2e8f0',
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    color: '#64748b',
+                                    font: {
+                                        size: 11
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: '#64748b',
+                                    font: {
+                                        size: 11
+                                    }
+                                }
+                            }
+                        },
+                        elements: {
+                            point: {
+                                hoverRadius: 6
+                            }
+                        }
+                    }
+                });
+
+                // Update chart data every 3 seconds
+                setInterval(updateChartData, 3000);
+            }
+        }
+
+        function generateChartData() {
+            return Array.from({length: 7}, () => Math.floor(Math.random() * 30 + 45));
+        }
+
+        function updateChartData() {
+            if (heroChart) {
+                // Shift data and add new point
+                const newData = [...heroChart.data.datasets[0].data];
+                newData.shift();
+                newData.push(Math.floor(Math.random() * 30 + 45));
+                
+                // Update time labels
+                const currentTime = new Date();
+                const timeLabel = currentTime.toTimeString().slice(0, 5);
+                heroChart.data.labels.shift();
+                heroChart.data.labels.push(timeLabel);
+                
+                heroChart.data.datasets[0].data = newData;
+                heroChart.update('none'); // Smooth update without animation
+            }
+        }
+
+        function startLiveDataUpdates() {
+            // Update hero stats
+            animationIntervals.push(setInterval(() => {
+                updateStat('liveDevices', () => Math.floor(Math.random() * 50 + 1220));
+                updateStat('energySaved', () => Math.floor(Math.random() * 8 + 30) + '%');
+                updateStat('monthlySavings', () => '₹' + (Math.random() * 0.8 + 2.0).toFixed(1) + 'M');
+            }, 4000));
+
+            // Update device statuses occasionally
+            animationIntervals.push(setInterval(() => {
+                updateDeviceStatuses();
+            }, 8000));
+        }
+
+        function updateStat(elementId, valueGenerator) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.style.opacity = '0.7';
+                element.style.transform = 'scale(0.95)';
+                
+                setTimeout(() => {
+                    element.textContent = valueGenerator();
+                    element.style.opacity = '1';
+                    element.style.transform = 'scale(1)';
+                }, 200);
+            }
+        }
+        function startTrial() {
+            showNotification('Starting your free trial...', 'success');
+            setTimeout(() => {
+                showNotification('Trial account created! Check your email.', 'success');
+            }, 2000);
+        }
+
+        function requestDemo() {
+            showNotification('Demo request submitted! We\'ll contact you soon.', 'success');
+        }
+
+        function updateDeviceStatuses() {
+            const devices = document.querySelectorAll('.device-status');
+            const statuses = ['status-on', 'status-auto', 'status-off'];
+            const statusTexts = ['Active', 'Auto', 'Standby'];
+            
+            devices.forEach((device, index) => {
+                if (Math.random() > 0.7) { // 30% chance to change status
+                    const randomIndex = Math.floor(Math.random() * statuses.length);
+                    const oldClass = device.className.split(' ').find(c => c.startsWith('status-'));
+                    
+                    device.classList.remove(oldClass);
+                    device.classList.add(statuses[randomIndex]);
+                    device.textContent = statusTexts[randomIndex];
+                    
+                    // Add a subtle animation
+                    device.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        device.style.transform = 'scale(1)';
+                    }, 200);
+                }
+            });
+        }
+
+
+        function showNotification(message, type = 'primary') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        function showPage(page) {
+            console.log('Navigate to:', page);
+        }
+
+        // Cleanup intervals on page unload
+        window.addEventListener('beforeunload', () => {
+            animationIntervals.forEach(interval => clearInterval(interval));
+        });
+
+        // Add some interactive hover effects
+        document.addEventListener('DOMContentLoaded', function() {
+            const deviceItems = document.querySelectorAll('.device-item');
+            
+            deviceItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-4px) scale(1.02)';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

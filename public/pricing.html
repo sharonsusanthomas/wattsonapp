@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - Wattson Energy Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="#" class="logo" onclick="showPage('home')">
+                <div class="logo-icon">⚡</div>
+                Wattson
+            </a>
+            <ul class="nav-links">
+                <li><a href="home.html" class="active">Home</a></li>
+                <li><a href="features.html" class="active">Features</a></li>
+                <li><a href="pricing.html" class="active">Pricing</a></li>
+                <li><a href="api.html" class="active">API</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+            </ul>
+            <div class="nav-cta">
+                <div class="nav-cta">
+                <a href="signin.html" class="btn btn-outline">Sign In</a>
+                <a href="auth.html" class="btn btn-primary">Get Started</a>
+            </div>
+            </div>
+            <div class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+    <div class="page-header">
+        <div class="container">
+            <h1 class="page-title">Pricing</h1>
+            <p class="page-subtitle">Choose the perfect plan for your business. Start free and scale as you grow.</p>
+        </div>
+    </div>
+    
+    <div class="page-content">
+        <div class="container">
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-title">Starter</div>
+                    <div class="pricing-price">₹2,999</div>
+                    <div class="pricing-period">per month</div>
+                    <ul class="pricing-features">
+                        <li>Up to 50 connected devices</li>
+                        <li>Real-time monitoring</li>
+                        <li>Basic automation rules</li>
+                        <li>Mobile app access</li>
+                        <li>Email support</li>
+                        <li>Standard analytics</li>
+                    </ul>
+                    <a href="#" class="btn btn-outline btn-large" onclick="selectPlan('starter')">Start Free Trial</a>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">Most Popular</div>
+                    <div class="pricing-title">Professional</div>
+                    <div class="pricing-price">₹8,999</div>
+                    <div class="pricing-period">per month</div>
+                    <ul class="pricing-features">
+                        <li>Up to 500 connected devices</li>
+                        <li>Advanced monitoring & alerts</li>
+                        <li>AI-powered automation</li>
+                        <li>API access & webhooks</li>
+                        <li>Priority support</li>
+                        <li>Advanced analytics & reports</li>
+                        <li>Custom dashboards</li>
+                        <li>Energy forecasting</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary btn-large" onclick="selectPlan('professional')">Start Free Trial</a>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="pricing-title">Enterprise</div>
+                    <div class="pricing-price">Custom</div>
+                    <div class="pricing-period">contact sales</div>
+                    <ul class="pricing-features">
+                        <li>Unlimited connected devices</li>
+                        <li>White-label solutions</li>
+                        <li>Custom integrations</li>
+                        <li>Dedicated account manager</li>
+                        <li>24/7 phone support</li>
+                        <li>Custom analytics</li>
+                        <li>SLA guarantees</li>
+                        <li>On-premise deployment</li>
+                    </ul>
+                    <a href="contact.html" class="btn btn-outline btn-large">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function selectPlan(plan) {
+            alert(`You selected the ${plan.charAt(0).toUpperCase() + plan.slice(1)} plan!\n\nIn a real application, this would redirect to the signup process with your selected plan pre-configured.`);
+        }
+    </script>
+</body>
+</html>

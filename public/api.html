@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - Wattson Energy Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="#" class="logo" onclick="showPage('home')">
+                <div class="logo-icon">⚡</div>
+                Wattson
+            </a>
+            <ul class="nav-links">
+                <li><a href="home.html" class="active">Home</a></li>
+                <li><a href="features.html" class="active">Features</a></li>
+                <li><a href="pricing.html" class="active">Pricing</a></li>
+                <li><a href="api.html" class="active">API</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+            </ul>
+            <div class="nav-cta">
+                <div class="nav-cta">
+                <a href="signin.html" class="btn btn-outline">Sign In</a>
+                <a href="auth.html" class="btn btn-primary">Get Started</a>
+            </div>
+            </div>
+            <div class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+    <div class="page-header">
+        <div class="container">
+            <h1 class="page-title">API Documentation</h1>
+            <p class="page-subtitle">Powerful REST API for seamless integration with your existing systems and workflows.</p>
+        </div>
+    </div>
+    
+    <div class="page-content">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <svg fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">RESTful API</h3>
+                    <p class="feature-description">Clean, intuitive REST endpoints with comprehensive documentation and examples for quick integration.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <svg fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Real-time WebSockets</h3>
+                    <p class="feature-description">Live data streaming with WebSocket connections for real-time monitoring and instant updates.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <svg fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Secure Authentication</h3>
+                    <p class="feature-description">OAuth2 and API key authentication with rate limiting and comprehensive security controls.</p>
+                </div>
+            </div>
+
+            <div class="api-demo">
+                <h3 style="color: #ffffff; margin-bottom: 16px;">Interactive API Demo</h3>
+                <p style="color: #cbd5e1; margin-bottom: 24px;">Try our API endpoints below to see live responses:</p>
+                
+                <div class="demo-controls">
+                    <button class="demo-btn" onclick="testApiCall('devices')">GET /devices</button>
+                    <button class="demo-btn" onclick="testApiCall('energy')">GET /energy/live</button>
+                    <button class="demo-btn secondary" onclick="testApiCall('control')">POST /control</button>
+                    <button class="demo-btn secondary" onclick="testApiCall('analytics')">GET /analytics</button>
+                </div>
+                
+                <div id="apiResponse">
+{
+  "message": "Click a button above to test our API endpoints",
+  "status": "ready",
+  "timestamp": "2025-07-26T15:30:00Z",
+  "endpoints": [
+    "/devices - Get connected devices",
+    "/energy/live - Real-time energy data",
+    "/control - Device control commands",
+    "/analytics - Usage analytics"
+  ]
+}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Demo Functions
+        async function testApiCall(endpoint) {
+            const responseDiv = document.getElementById('apiResponse');
+            if (!responseDiv) return;
+
+            // Show loading state
+            responseDiv.innerHTML = `
+{
+  "status": "loading",
+  "message": "Fetching data from ${endpoint} endpoint...",
+  "timestamp": "${new Date().toISOString()}"
+}`;
+
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 1200));
+
+            // Mock responses based on endpoint
+            let mockResponse;
+            switch(endpoint) {
+                case 'devices':
+                    mockResponse = {
+                        status: "success",
+                        timestamp: new Date().toISOString(),
+                        data: {
+                            devices: [
+                                {
+                                    id: "wattson-main-001",
+                                    name: "Main Office Floor 1",
+                                    type: "smart_controller",
+                                    status: "online",
+                                    energyUsage: 247.8,
+                                    efficiency: 92.3,
+                                    location: "Building A"
+                                },
+                                {
+                                    id: "wattson-conf-002",
+                                    name: "Conference Room A",
+                                    type: "lighting_controller",
+                                    status: "online",
+                                    energyUsage: 156.2,
+                                    efficiency: 88.7,
+                                    location: "Building A"
+                                }
+                            ],
+                            totalDevices: 1247,
+                            onlineDevices: 1245,
+                            offlineDevices: 2
+                        }
+                    };
+                    break;
+                case 'energy':
+                    mockResponse = {
+                        status: "success",
+                        timestamp: new Date().toISOString(),
+                        data: {
+                            realTimeUsage: 2847.6,
+                            unit: "watts",
+                            trend: "decreasing",
+                            efficiency: 94.2,
+                            projectedSavings: {
+                                daily: 847.2,
+                                monthly: 25416.0,
+                                currency: "INR"
+                            },
+                            breakdown: {
+                                lighting: 35.2,
+                                hvac: 42.8,
+                                equipment: 22.0
+                            }
+                        }
+                    };
+                    break;
+                case 'control':
+                    mockResponse = {
+                        status: "success",
+                        timestamp: new Date().toISOString(),
+                        data: {
+                            deviceId: "wattson-main-001",
+                            action: "brightness_adjust",
+                            previousValue: 80,
+                            newValue: 65,
+                            estimatedSavings: 15.6,
+                            response: "Device control successful",
+                            executionTime: "0.23s"
+                        }
+                    };
+                    break;
+                case 'analytics':
+                    mockResponse = {
+                        status: "success",
+                        timestamp: new Date().toISOString(),
+                        data: {
+                            period: "last_30_days",
+                            totalConsumption: 45680.5,
+                            averageDaily: 1522.7,
+                            peakHour: "14:00",
+                            efficiency: {
+                                current: 92.4,
+                                improvement: 5.2,
+                                target: 95.0
+                            },
+                            costAnalysis: {
+                                totalCost: 228402.5,
+                                projectedSavings: 34567.8,
+                                currency: "INR"
+                            }
+                        }
+                    };
+                    break;
+                default:
+                    mockResponse = {
+                        status: "error",
+                        message: "Unknown endpoint",
+                        timestamp: new Date().toISOString()
+                    };
+            }
+
+            // Format and display response
+            responseDiv.innerHTML = JSON.stringify(mockResponse, null, 2)
+                .replace(/"([^"]+)":/g, '<span class="code-key">"$1"</span>:')
+                .replace(/": "([^"]+)"/g, '": <span class="code-string">"$1"</span>')
+                .replace(/": ([0-9.]+)/g, '": <span class="code-number">$1</span>')
+                .replace(/": (true|false)/g, '": <span class="code-boolean">$1</span>');
+        }
+    </script>
+</body>
+</html>

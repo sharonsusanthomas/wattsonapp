@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign In | Wattson</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <nav class="container">
+      <a href="index.html" class="logo"><span class="logo-icon">⚡</span> Wattson</a>
+    </nav>
+  </header>
+
+  <main class="container page active" style="padding-top:120px; max-width:500px;">
+    <!-- Sign In -->
+    <div class="contact-form" id="loginForm">
+      <h2>Sign In</h2>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" id="loginEmail" class="form-input" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" id="loginPassword" class="form-input" required>
+      </div>
+      <button class="btn btn-primary" onclick="login()">Sign In</button>
+      <p>Don’t have an account? <a href="auth.html">Sign Up</a></p>
+      <p><a href="forgot-password.html">Forgot Password?</a></p>
+
+    </div>
+
+    <div id="notification" class="notification"></div>
+  </main>
+
+  <script>
+    const API_URL = "http://localhost:5000/api";
+
+    function showNotification(message, type="success") {
+      const notif = document.getElementById("notification");
+      notif.textContent = message;
+      notif.className = "notification show " + type;
+      setTimeout(() => notif.className = "notification", 3000);
+    }
+
+    async function login() {
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      const res = await fetch(`${API_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        showNotification("Welcome " + data.user.fullName, "success");
+        setTimeout(() => window.location.href = "index.html", 1500);
+      } else {
+        showNotification(data.message, "error");
+      }
+    }
+  </script>
+</body>
+</html>

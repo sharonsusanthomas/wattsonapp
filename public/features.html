@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wattson - Professional Energy Management Platform</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #3b82f6;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-700);
+            background: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--gray-200);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--gray-600);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .nav-cta {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--gray-600);
+            border: 1px solid var(--gray-300);
+        }
+
+        .btn-outline:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Page Content Styles */
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 80px 0 60px;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .page-subtitle {
+            font-size: 20px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .page-content {
+            padding: 80px 0;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+            margin-top: 48px;
+        }
+
+        .feature-card {
+            padding: 32px;
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 32px rgba(37, 99, 235, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .feature-icon-wrapper {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .feature-icon-wrapper svg {
+            width: 24px;
+            height: 24px;
+            color: white;
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 12px;
+        }
+
+        .feature-description {
+            font-size: 16px;
+            color: var(--gray-600);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .feature-stats {
+            background: var(--gray-50);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--gray-200);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        .feature-demo {
+            background: var(--dark-light);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--gray-700);
+            color: var(--gray-300);
+        }
+
+        .demo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .demo-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .demo-status {
+            padding: 4px 8px;
+            background: var(--success);
+            color: white;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .demo-content {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            background: var(--dark);
+            border-radius: 8px;
+            padding: 16px;
+            overflow-x: auto;
+        }
+
+        .code-key { color: #7dd3fc; }
+        .code-string { color: #86efac; }
+        .code-number { color: #fbbf24; }
+        .code-boolean { color: #f472b6; }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .data-table th {
+            background: var(--gray-100);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 14px;
+        }
+
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--gray-200);
+            font-size: 14px;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-online { color: var(--success); font-weight: 600; }
+        .status-offline { color: var(--error); font-weight: 600; }
+        .status-auto { color: var(--warning); font-weight: 600; }
+
+        .chart-container {
+            position: relative;
+            height: 200px;
+            margin: 20px 0;
+            background: var(--gray-50);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .feature-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .feature-link {
+            color: var(--primary);
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.2s ease;
+        }
+
+        .feature-link:hover {
+            color: var(--primary-dark);
+        }
+
+        /* Loading States */
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-radius: 50%;
+            border-top-color: currentColor;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 36px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .mobile-menu-toggle span {
+            width: 24px;
+            height: 2px;
+            background: var(--gray-700);
+            margin: 2px 0;
+            transition: 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: flex;
+            }
+        }
+
+        /* Data visualization components */
+        .device-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .device-item {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .device-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .device-icon {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .device-name {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 4px;
+        }
+
+        .device-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            padding: 16px 24px;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            max-width: 300px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: var(--success);
+        }
+
+        .notification.warning {
+            background: var(--warning);
+        }
+
+        .notification.error {
+            background: var(--error);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="#" class="logo" onclick="showPage('home')">
+                <div class="logo-icon">⚡</div>
+                Wattson
+            </a>
+            <ul class="nav-links">
+                <li><a href="home.html" class="active">Home</a></li>
+                <li><a href="features.html" class="active">Features</a></li>
+                <li><a href="pricing.html" class="active">Pricing</a></li>
+                <li><a href="api.html" class="active">API</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+            </ul>
+            <div class="nav-cta">
+                <a href="signin.html" class="btn btn-outline">Sign In</a>
+                <a href="auth.html" class="btn btn-primary">Get Started</a>
+            </div>
+            <div class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- FEATURES PAGE -->
+    <div id="features" class="page active">
+        <div class="page-header">
+            <div class="container">
+                <h1 class="page-title">Features</h1>
+                <p class="page-subtitle">Comprehensive platform with advanced monitoring, intelligent automation, and powerful analytics for modern businesses.</p>
+            </div>
+        </div>
+        
+        <div class="page-content">
+            <div class="container">
+                <div class="features-grid">
+                    <!-- Real-Time Monitoring Feature -->
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <svg fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M13 3v18l10-8-10-8zM11 21V3L1 11l10 10z"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Real-Time Monitoring</h3>
+                        <p class="feature-description">Monitor energy consumption across all devices with millisecond precision. Get instant alerts and automated reports delivered to your dashboard.</p>
+                        
+                        <div class="feature-stats">
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <span class="stat-value" id="monitoringDevices">1,247</span>
+                                    <span class="stat-label">Active Devices</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="monitoringUptime">99.8%</span>
+                                    <span class="stat-label">Uptime</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="monitoringAlerts">23</span>
+                                    <span class="stat-label">Active Alerts</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="monitoringResponse">45ms</span>
+                                    <span class="stat-label">Avg Response</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="feature-demo">
+                            <div class="demo-header">
+                                <span class="demo-title">Live Device Data</span>
+                                <span class="demo-status">CONNECTED</span>
+                            </div>
+                            <div class="demo-content" id="monitoringDemo">
+                                <span class="code-key">"device_id"</span>: <span class="code-string">"hvac_001"</span>,<br>
+                                <span class="code-key">"power_consumption"</span>: <span class="code-number">1247.5</span>W,<br>
+                                <span class="code-key">"efficiency"</span>: <span class="code-number">94.2</span>%,<br>
+                                <span class="code-key">"status"</span>: <span class="code-string">"active"</span>,<br>
+                                <span class="code-key">"last_updated"</span>: <span class="code-string">"2025-07-31T09:45:32Z"</span>
+                            </div>
+                        </div>
+
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Device</th>
+                                    <th>Status</th>
+                                    <th>Power (W)</th>
+                                    <th>Efficiency</th>
+                                </tr>
+                            </thead>
+                            <tbody id="monitoringTable">
+                                <tr>
+                                    <td>HVAC System 001</td>
+                                    <td class="status-online">Online</td>
+                                    <td>1,247</td>
+                                    <td>94.2%</td>
+                                </tr>
+                                <tr>
+                                    <td>LED Array 012</td>
+                                    <td class="status-online">Online</td>
+                                    <td>453</td>
+                                    <td>98.7%</td>
+                                </tr>
+                                <tr>
+                                    <td>Server Rack A</td>
+                                    <td class="status-auto">Auto</td>
+                                    <td>2,156</td>
+                                    <td>91.3%</td>
+                                </tr>
+                                <tr>
+                                    <td>Backup Generator</td>
+                                    <td class="status-offline">Standby</td>
+                                    <td>0</td>
+                                    <td>-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="feature-actions">
+                            <button class="btn btn-primary btn-small" onclick="refreshMonitoringData()">Refresh Data</button>
+                            <a href="#" class="feature-link">View Full Dashboard →</a>
+                        </div>
+                    </div>
+
+                    <!-- Smart Automation Feature -->
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <svg fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Smart Automation</h3>
+                        <p class="feature-description">AI-powered automation optimizes energy usage based on occupancy patterns, weather data, and business schedules for maximum efficiency.</p>
+                        
+                        <div class="feature-stats">
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <span class="stat-value" id="automationRules">156</span>
+                                    <span class="stat-label">Active Rules</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="automationSavings">34.2%</span>
+                                    <span class="stat-label">Energy Saved</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="automationActions">2,847</span>
+                                    <span class="stat-label">Daily Actions</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="automationAccuracy">97.1%</span>
+                                    <span class="stat-label">Accuracy</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="device-grid" id="automationDevices">
+                            <div class="device-item">
+                                <div class="device-icon">🌡️</div>
+                                <div class="device-name">Thermostat</div>
+                                <div class="device-value">22°C</div>
+                            </div>
+                            <div class="device-item">
+                                <div class="device-icon">💡</div>
+                                <div class="device-name">Lighting</div>
+                                <div class="device-value">85%</div>
+                            </div>
+                            <div class="device-item">
+                                <div class="device-icon">🌪️</div>
+                                <div class="device-name">HVAC</div>
+                                <div class="device-value">Auto</div>
+                            </div>
+                            <div class="device-item">
+                                <div class="device-icon">🔌</div>
+                                <div class="device-name">Outlets</div>
+                                <div class="device-value">12/16</div>
+                            </div>
+                        </div>
+
+                        <div class="feature-demo">
+                            <div class="demo-header">
+                                <span class="demo-title">Automation Engine</span>
+                                <span class="demo-status">LEARNING</span>
+                            </div>
+                            <div class="demo-content" id="automationDemo">
+                                <span class="code-key">"rule_id"</span>: <span class="code-string">"occupancy_hvac_001"</span>,<br>
+                                <span class="code-key">"condition"</span>: <span class="code-string">"occupancy < 10%"</span>,<br>
+                                <span class="code-key">"action"</span>: <span class="code-string">"reduce_hvac_50%"</span>,<br>
+                                <span class="code-key">"confidence"</span>: <span class="code-number">0.94</span>,<br>
+                                <span class="code-key">"estimated_savings"</span>: <span class="code-string">"₹2,340/day"</span>
+                            </div>
+                        </div>
+
+                        <div class="feature-actions">
+                            <button class="btn btn-primary btn-small" onclick="updateAutomationRules()">Update Rules</button>
+                            <a href="#" class="feature-link">Configure Automation →</a>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Analytics Feature -->
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <svg fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Advanced Analytics</h3>
+                        <p class="feature-description">Comprehensive analytics with custom dashboards, trend analysis, cost forecasting, and actionable insights to drive decision-making.</p>
+                        
+                        <div class="feature-stats">
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <span class="stat-value" id="analyticsDataPoints">50.2B</span>
+                                    <span class="stat-label">Data Points</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="analyticsReports">1,834</span>
+                                    <span class="stat-label">Reports Generated</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="analyticsForecast">98.3%</span>
+                                    <span class="stat-label">Forecast Accuracy</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="analyticsCostSaved">₹2.4M</span>
+                                    <span class="stat-label">Monthly Savings</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chart-container">
+                            <canvas id="analyticsChart" width="400" height="180"></canvas>
+                        </div>
+
+                        <div class="feature-demo">
+                            <div class="demo-header">
+                                <span class="demo-title">Analytics Query</span>
+                                <span class="demo-status">PROCESSING</span>
+                            </div>
+                            <div class="demo-content" id="analyticsDemo">
+                                <span class="code-key">"query"</span>: <span class="code-string">"energy_consumption_trend"</span>,<br>
+                                <span class="code-key">"timeframe"</span>: <span class="code-string">"last_30_days"</span>,<br>
+                                <span class="code-key">"avg_consumption"</span>: <span class="code-number">47.2</span>kWh,<br>
+                                <span class="code-key">"trend"</span>: <span class="code-string">"decreasing"</span>,<br>
+                                <span class="code-key">"variance"</span>: <span class="code-number">-12.4</span>%
+                            </div>
+                        </div>
+
+                        <div class="feature-actions">
+                            <button class="btn btn-primary btn-small" onclick="generateAnalyticsReport()">Generate Report</button>
+                            <a href="#" class="feature-link">View Analytics Dashboard →</a>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Applications Feature -->
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <svg fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Mobile Applications</h3>
+                        <p class="feature-description">Native iOS and Android apps with offline capabilities, push notifications, and intuitive controls for managing your energy systems on-the-go.</p>
+                        
+                        <div class="feature-stats">
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <span class="stat-value" id="mobileUsers">45.7K</span>
+                                    <span class="stat-label">Active Users</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="mobileRating">4.8/5</span>
+                                    <span class="stat-label">App Rating</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="mobileNotifications">2,156</span>
+                                    <span class="stat-label">Daily Notifications</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="mobileOfflineSync">99.1%</span>
+                                    <span class="stat-label">Sync Success</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Platform</th>
+                                    <th>Version</th>
+                                    <th>Downloads</th>
+                                    <th>Rating</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mobileAppsTable">
+                                <tr>
+                                    <td>iOS</td>
+                                    <td>3.2.1</td>
+                                    <td>28,450</td>
+                                    <td class="status-online">4.9/5</td>
+                                </tr>
+                                <tr>
+                                    <td>Android</td>
+                                    <td>3.2.0</td>
+                                    <td>41,230</td>
+                                    <td class="status-online">4.7/5</td>
+                                </tr>
+                                <tr>
+                                    <td>Web App</td>
+                                    <td>2.8.5</td>
+                                    <td>156,890</td>
+                                    <td class="status-online">4.8/5</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="feature-demo">
+                            <div class="demo-header">
+                                <span class="demo-title">Push Notification</span>
+                                <span class="demo-status">ACTIVE</span>
+                            </div>
+                            <div class="demo-content" id="mobileDemo">
+                                <span class="code-key">"notification_type"</span>: <span class="code-string">"energy_spike"</span>,<br>
+                                <span class="code-key">"message"</span>: <span class="code-string">"Unusual consumption detected"</span>,<br>
+                                <span class="code-key">"device"</span>: <span class="code-string">"Server Rack B"</span>,<br>
+                                <span class="code-key">"severity"</span>: <span class="code-string">"medium"</span>,<br>
+                                <span class="code-key">"action_required"</span>: <span class="code-boolean">true</span>
+                            </div>
+                        </div>
+
+                        <div class="feature-actions">
+                            <button class="btn btn-primary btn-small" onclick="sendTestNotification()">Send Test</button>
+                            <a href="#" class="feature-link">Download Apps →</a>
+                        </div>
+                    </div>
+
+                    <!-- Enterprise API Feature -->
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <svg fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Enterprise API</h3>
+                        <p class="feature-description">RESTful API with comprehensive documentation, webhooks, OAuth2 authentication, and SDKs for seamless system integration.</p>
+                        
+                        <div class="feature-stats">
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <span class="stat-value" id="apiCalls">2.8M</span>
+                                    <span class="stat-label">Daily API Calls</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="apiUptime">99.9%</span>
+                                    <span class="stat-label">API Uptime</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="apiIntegrations">847</span>
+                                    <span class="stat-label">Active Integrations</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="apiLatency">89ms</span>
+                                    <span class="stat-label">Avg Latency</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="feature-demo">
+                            <div class="demo-header">
+                                <span class="demo-title">API Response</span>
+                                <span class="demo-status">200 OK</span>
+                            </div>
+                            <div class="demo-content" id="apiDemo">
+                                GET /api/v2/devices/summary<br><br>
+                                {<br>
+                                &nbsp;&nbsp;<span class="code-key">"status"</span>: <span class="code-string">"success"</span>,<br>
+                                &nbsp;&nbsp;<span class="code-key">"data"</span>: {<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"total_devices"</span>: <span class="code-number">1247</span>,<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"online"</span>: <span class="code-number">1198</span>,<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"total_consumption"</span>: <span class="code-number">45.7</span><br>
+                                &nbsp;&nbsp;}<br>
+                                }
+                            </div>
+                        </div>
+
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Endpoint</th>
+                                    <th>Method</th>
+                                    <th>Rate Limit</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>/api/v2/devices</td>
+                                    <td>GET</td>
+                                    <td>1000/hour</td>
+                                    <td class="status-online">Active</td>
+                                </tr>
+                                <tr>
+                                    <td>/api/v2/analytics</td>
+                                    <td>POST</td>
+                                    <td>500/hour</td>
+                                    <td class="status-online">Active</td>
+                                </tr>
+                                <tr>
+                                    <td>/api/v2/webhooks</td>
+                                    <td>PUT</td>
+                                    <td>100/hour</td>
+                                    <td class="status-online">Active</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="feature-actions">
+                            <button class="btn btn-primary btn-small" onclick="testApiEndpoint()">Test API</button>
+                            <a href="#" class="feature-link">View Documentation →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data animation and updates
+        let animationIntervals = [];
+
+        // Initialize all features
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            startDataAnimations();
+        });
+
+        function initializeCharts() {
+            // Analytics Chart
+            async function loadAnalytics() {
+    try {
+        const res = await fetch("http://localhost:5000/api/analytics");
+        const data = await res.json();
+
+        document.getElementById("analyticsReports").innerText = data.reports;
+        document.getElementById("analyticsForecast").innerText = data.forecastAccuracy;
+        document.getElementById("analyticsCostSaved").innerText = data.costSaved;
+        document.getElementById("analyticsDataPoints").innerText = data.dataPoints;
+
+        const ctx = document.getElementById("analyticsChart");
+        new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+                datasets: [{
+                    label: "Energy Consumption (kWh)",
+                    data: data.chart,
+                    borderColor: "#2563eb",
+                    backgroundColor: "rgba(37, 99, 235, 0.1)",
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    } catch (err) {
+        console.error("Error loading analytics", err);
+    }
+}
+
+        }
+
+        function startDataAnimations() {
+            // Animate monitoring stats
+            animationIntervals.push(setInterval(() => {
+                updateElement('monitoringDevices', () => Math.floor(Math.random() * 50 + 1220));
+                updateElement('monitoringAlerts', () => Math.floor(Math.random() * 10 + 20));
+                updateElement('monitoringResponse', () => Math.floor(Math.random() * 20 + 35) + 'ms');
+            }, 3000));
+
+            // Animate automation stats
+            animationIntervals.push(setInterval(() => {
+                updateElement('automationActions', () => Math.floor(Math.random() * 200 + 2750));
+                updateElement('automationSavings', () => (Math.random() * 5 + 32).toFixed(1) + '%');
+            }, 4000));
+
+            // Animate analytics stats
+            animationIntervals.push(setInterval(() => {
+                updateElement('analyticsReports', () => Math.floor(Math.random() * 100 + 1800));
+                updateElement('analyticsCostSaved', () => '₹' + (Math.random() * 0.5 + 2.2).toFixed(1) + 'M');
+            }, 5000));
+
+            // Animate mobile stats
+            animationIntervals.push(setInterval(() => {
+                updateElement('mobileUsers', () => (Math.random() * 2 + 44).toFixed(1) + 'K');
+                updateElement('mobileNotifications', () => Math.floor(Math.random() * 200 + 2100));
+            }, 3500));
+
+            // Animate API stats
+            animationIntervals.push(setInterval(() => {
+                updateElement('apiCalls', () => (Math.random() * 0.5 + 2.5).toFixed(1) + 'M');
+                updateElement('apiLatency', () => Math.floor(Math.random() * 30 + 75) + 'ms');
+            }, 2500));
+        }
+
+        function updateElement(id, valueGenerator) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.style.opacity = '0.6';
+                setTimeout(() => {
+                    element.textContent = valueGenerator();
+                    element.style.opacity = '1';
+                }, 150);
+            }
+        }
+
+        // Interactive functions
+        async function refreshMonitoringData() {
+    try {
+        const res = await fetch("http://localhost:5000/api/devices");
+        const data = await res.json();
+
+        // Update stats
+        document.getElementById("monitoringDevices").innerText = data.stats.activeDevices;
+        document.getElementById("monitoringUptime").innerText = data.stats.uptime;
+        document.getElementById("monitoringAlerts").innerText = data.stats.alerts;
+        document.getElementById("monitoringResponse").innerText = data.stats.avgResponse;
+
+        // Update table
+        const tbody = document.getElementById("monitoringTable");
+        tbody.innerHTML = "";
+        data.devices.forEach(d => {
+            tbody.innerHTML += `
+              <tr>
+                <td>${d.name}</td>
+                <td class="${d.status === "online" ? "status-online" : d.status === "auto" ? "status-auto" : "status-offline"}">${d.status}</td>
+                <td>${d.power}</td>
+                <td>${d.efficiency}</td>
+              </tr>
+            `;
+        });
+    } catch (err) {
+        console.error("Error fetching monitoring data", err);
+    }
+}
+
+
+        function updateAutomationRules() {
+            showNotification('Automation rules updated', 'success');
+        }
+
+        function generateAnalyticsReport() {
+            showNotification('Generating analytics report...', 'warning');
+            setTimeout(() => {
+                showNotification('Report generated successfully', 'success');
+            }, 2000);
+        }
+
+        function sendTestNotification() {
+            showNotification('Test notification sent to mobile devices', 'success');
+        }
+
+        function testApiEndpoint() {
+            showNotification('API endpoint test completed', 'success');
+        }
+
+        function showNotification(message, type = 'primary') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+
+        // Navigation function (placeholder for multi-page functionality)
+        function showPage(page) {
+            console.log('Navigate to:', page);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+    refreshMonitoringData();
+    loadAnalytics();
+});
+
+        // Cleanup intervals on page unload
+        window.addEventListener('beforeunload', () => {
+            animationIntervals.forEach(interval => clearInterval(interval));
+        });
+    </script>
+</body>
+</html>

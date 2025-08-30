@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Wattson Energy Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="#" class="logo" onclick="showPage('home')">
+                <div class="logo-icon">⚡</div>
+                Wattson
+            </a>
+            <ul class="nav-links">
+                <li><a href="home.html" class="active">Home</a></li>
+                <li><a href="features.html" class="active">Features</a></li>
+                <li><a href="pricing.html" class="active">Pricing</a></li>
+                <li><a href="api.html" class="active">API</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+            </ul>
+            <div class="nav-cta">
+                <div class="nav-cta">
+                <a href="signin.html" class="btn btn-outline">Sign In</a>
+                <a href="auth.html" class="btn btn-primary">Get Started</a>
+            </div>
+            </div>
+            <div class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+    <div class="page-header">
+        <div class="container">
+            <h1 class="page-title">Contact Us</h1>
+            <p class="page-subtitle">Get in touch with our team. We'd love to hear from you and help you get started.</p>
+        </div>
+    </div>
+    
+    <div class="page-content">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;">
+                <div>
+                    <h3 style="font-size: 24px; font-weight: 600; color: var(--gray-900); margin-bottom: 24px;">Get Started Today</h3>
+                    <p style="font-size: 16px; color: var(--gray-600); line-height: 1.6; margin-bottom: 32px;">
+                        Ready to transform your energy management? Our team is here to help you get started with Wattson 
+                        and answer any questions you might have.
+                    </p>
+
+                    <div style="margin-bottom: 32px;">
+                        <h4 style="font-size: 16px; font-weight: 600; color: var(--gray-900); margin-bottom: 12px;">📧 Email</h4>
+                        <p style="color: var(--gray-600);">contact@wattson.io</p>
+                    </div>
+
+                    <div style="margin-bottom: 32px;">
+                        <h4 style="font-size: 16px; font-weight: 600; color: var(--gray-900); margin-bottom: 12px;">📞 Phone</h4>
+                        <p style="color: var(--gray-600);">+91 80 4567 8900</p>
+                    </div>
+
+                    <div style="margin-bottom: 32px;">
+                        <h4 style="font-size: 16px; font-weight: 600; color: var(--gray-900); margin-bottom: 12px;">🏢 Office</h4>
+                        <p style="color: var(--gray-600);">
+                            WeWork Galaxy, 43, Residency Road<br>
+                            Bengaluru, Karnataka 560025<br>
+                            India
+                        </p>
+                    </div>
+
+                    <div>
+                        <h4 style="font-size: 16px; font-weight: 600; color: var(--gray-900); margin-bottom: 12px;">🕒 Business Hours</h4>
+                        <p style="color: var(--gray-600);">
+                            Monday - Friday: 9:00 AM - 6:00 PM IST<br>
+                            Saturday: 10:00 AM - 2:00 PM IST
+                        </p>
+                    </div>
+                </div>
+
+                <form id="contactForm">
+    <div class="form-group">
+        <label class="form-label">Full Name *</label>
+        <input type="text" class="form-input" name="fullName" required placeholder="Enter your full name">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Email Address *</label>
+        <input type="email" class="form-input" name="email" required placeholder="Enter your email">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Company</label>
+        <input type="text" class="form-input" name="company" placeholder="Enter your company name">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <input type="tel" class="form-input" name="phoneNumber" placeholder="Enter your phone number">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">How can we help? *</label>
+        <textarea class="form-input form-textarea" name="message" required placeholder="Tell us about your energy management needs..."></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">Send Message</button>
+</form>
+<script>
+  const contactForm = document.getElementById('contactForm');
+
+  contactForm.addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    // collect form data
+    const formData = {
+      fullName: contactForm.fullName.value.trim(),
+      email: contactForm.email.value.trim(),
+      company: contactForm.company.value.trim(),
+      phoneNumber: contactForm.phoneNumber.value.trim(),
+      message: contactForm.message.value.trim(),
+    };
+
+    try {
+      const response = await fetch("http://localhost:5000/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        alert("✅ Message sent successfully!");
+        contactForm.reset();
+      } else {
+        const errorData = await response.json();
+        alert("❌ Failed: " + (errorData.error || response.statusText));
+      }
+    } catch (error) {
+      alert("⚠️ Error sending message: " + error.message);
+    }
+  });
+</script>                        
+                </div>
+            </div>
+        </div>
+    </div>
+
+          
+
+</body>
+</html>

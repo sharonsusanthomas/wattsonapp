@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Device Readings</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Live Device Readings</h1>
+            <nav>
+                <a href="D:\Academic\SEMESTER 5\MiniProject\wattson-backend\public\devices.html">Devices</a>
+                <a href="D:\Academic\SEMESTER 5\MiniProject\wattson-backend\readings.html" class="active">Live Readings</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="status-note">
+                <p>Displaying the latest power reading for each device. The backend generates new random readings every 15 minutes. This page will refresh automatically to show the latest data.</p>
+            </div>
+            <table id="readingsTable">
+                <thead>
+                    <tr>
+                        <th>Device ID</th>
+                        <th>Device Name</th>
+                        <th>Status</th>
+                        <th>Power (Watts)</th>
+                        <th>Last Recorded</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tableBody = document.querySelector("#readingsTable tbody");
+            const API_URL = "/api/devices";
+
+            const fetchReadings = async () => {
+                try {
+                    const response = await fetch(API_URL);
+                    if (!response.ok) throw new Error("Failed to fetch readings");
+                    const data = await response.json();
+                    const devices = data.devices;
+
+                    tableBody.innerHTML = ""; // Clear existing rows
+                    if (!devices || devices.length === 0) {
+                        tableBody.innerHTML = '<tr><td colspan="5">No devices found.</td></tr>';
+                        return;
+                    }
+
+                    devices.forEach(device => {
+                        const row = document.createElement("tr");
+                        const formattedDate = device.last_recorded 
+                            ? new Date(device.last_recorded).toLocaleString() 
+                            : 'N/A';
+
+                        row.innerHTML = `
+                            <td>${device.id}</td>
+                            <td>${device.name}</td>
+                            <td>${device.status}</td>
+                            <td>${device.power || 0} W</td>
+                            <td>${formattedDate}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+
+                } catch (error) {
+                    console.error("Error fetching readings:", error);
+                    tableBody.innerHTML = `<tr><td colspan="5">Error loading data.</td></tr>`;
+                }
+            };
+
+            // Fetch data immediately on page load
+            fetchReadings();
+
+            // Refresh the data every 30 seconds to get the latest readings
+            setInterval(fetchReadings, 30 * 1000); // 30 seconds
+        });
+    </script>
+</body>
+</html>

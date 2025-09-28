@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Device Readings</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { font-family: Arial, sans-serif; background:#f5f5f5; margin:0; padding:0;}
+    .container { width:90%; max-width:1000px; margin:30px auto; background:#fff; padding:20px; border-radius:8px; box-shadow:0 0 15px rgba(0,0,0,0.1);}
+    header h1 { margin:0; }
+    nav a { margin-right:15px; text-decoration:none; color:#333; }
+    nav a.active { font-weight:bold; }
+    table { width:100%; border-collapse: collapse; margin-top:20px; }
+    th, td { border:1px solid #ccc; padding:8px; text-align:left; }
+    th { background:#eee; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Live Device Readings</h1>
+      <nav>
+        <a href="D:\Academic\SEMESTER 5\MiniProject\wattson-backend\public\devices.html" class="active">Devices</a>
+        <a href="D:\Academic\SEMESTER 5\MiniProject\wattson-backend\readings.html">Live Readings</a>
+      </nav>
+    </header>
+
+    <main>
+      <p>Latest power readings are shown below. Page refreshes automatically every 30 seconds.</p>
+      <table id="readingsTable">
+        <thead>
+          <tr>
+            <th>Device ID</th>
+            <th>Device Name</th>
+            <th>Status</th>
+            <th>Power (Watts)</th>
+            <th>Last Recorded</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </main>
+  </div>
+
+  <script>
+    const tableBody = document.querySelector("#readingsTable tbody");
+    const API_URL = "/api/devices";
+
+    async function fetchReadings() {
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        tableBody.innerHTML = "";
+        if (!data.devices.length) {
+          tableBody.innerHTML = '<tr><td colspan="5">No devices found.</td></tr>';
+          return;
+        }
+
+        data.devices.forEach(d => {
+          const formattedDate = d.last_recorded ? new Date(d.last_recorded).toLocaleString() : 'N/A';
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${d.id}</td>
+            <td>${d.name}</td>
+            <td>${d.status}</td>
+            <td>${d.power} W</td>
+            <td>${formattedDate}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+      } catch (err) {
+        tableBody.innerHTML = '<tr><td colspan="5">Reading will be updated once devices are deployd</td></tr>';
+        console.error(err);
+      }
+    }
+
+    fetchReadings();
+    setInterval(fetchReadings, 30 * 1000); // refresh every 30s
+  </script>
+</body>
+</html>

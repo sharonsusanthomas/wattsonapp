@@ -24,10 +24,9 @@
         <label class="form-label">Password</label>
         <input type="password" id="loginPassword" class="form-input" required>
       </div>
-      <button class="btn btn-primary" onclick="login()">Sign In</button>
-      <p>Don’t have an account? <a href="auth.html">Sign Up</a></p>
+      <button class="btn btn-primary" onclick="login()" id="loginBtn">Sign In</button>
+      <p>Don't have an account? <a href="auth.html">Sign Up</a></p>
       <p><a href="forgot-password.html">Forgot Password?</a></p>
-
     </div>
 
     <div id="notification" class="notification"></div>
@@ -44,23 +43,60 @@
     }
 
     async function login() {
-      const email = document.getElementById("loginEmail").value;
+      const email = document.getElementById("loginEmail").value.trim();
       const password = document.getElementById("loginPassword").value;
+      const loginBtn = document.getElementById("loginBtn");
 
-      const res = await fetch(`${API_URL}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-      });
+      if (!email || !password) {
+        showNotification("Please enter both email and password", "error");
+        return;
+      }
 
-      const data = await res.json();
-      if (data.success) {
-        showNotification("Welcome " + data.user.fullName, "success");
-        setTimeout(() => window.location.href = "index.html", 1500);
-      } else {
-        showNotification(data.message, "error");
+      // Show loading state
+      loginBtn.textContent = "Signing in...";
+      loginBtn.disabled = true;
+
+      try {
+        const res = await fetch(`${API_URL}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+        
+        if (data.success) {
+          // Store user data in localStorage
+          localStorage.setItem('wattsonUser', JSON.stringify(data.user));
+          
+          showNotification("Welcome " + data.user.fullName, "success");
+          setTimeout(() => window.location.href = "dashboard.html", 1500);
+        } else {
+          showNotification(data.message, "error");
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        showNotification("Connection error. Please try again.", "error");
+      } finally {
+        loginBtn.textContent = "Sign In";
+        loginBtn.disabled = false;
       }
     }
+
+    // Allow Enter key to submit
+    document.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        login();
+      }
+    });
+
+    // Check if user is already logged in
+    document.addEventListener('DOMContentLoaded', function() {
+      const user = localStorage.getItem('wattsonUser');
+      if (user) {
+        window.location.href = 'dashboard.html';
+      }
+    });
   </script>
 </body>
 </html>

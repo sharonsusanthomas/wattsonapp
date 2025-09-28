@@ -19,6 +19,7 @@
       <div class="form-group">
         <label class="form-label">Full Name</label>
         <input type="text" id="signupName" class="form-input" required>
+        <small style="color: var(--gray-500); font-size: 12px;">Must be 2-100 characters, letters only</small>
       </div>
       <div class="form-group">
         <label class="form-label">Email</label>
@@ -27,8 +28,11 @@
       <div class="form-group">
         <label class="form-label">Password</label>
         <input type="password" id="signupPassword" class="form-input" required>
+        <small style="color: var(--gray-500); font-size: 12px;">
+          Must be 8+ characters with uppercase, lowercase, number, and special character
+        </small>
       </div>
-      <button class="btn btn-primary" onclick="signup()">Sign Up</button>
+      <button class="btn btn-primary" onclick="signup()" id="signupBtn">Sign Up</button>
       <p>Already have an account? <a href="signin.html">Sign In</a></p>
     </div>
 
@@ -45,24 +49,88 @@
       setTimeout(() => notif.className = "notification", 3000);
     }
 
+    function validateForm(fullName, email, password) {
+      // Name validation (2-100 characters, letters and spaces only)
+      const nameRegex = /^[A-Za-z\s'.-]{2,100}$/;
+      if (!nameRegex.test(fullName)) {
+        showNotification("Name must be 2-100 characters with letters only", "error");
+        return false;
+      }
+
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showNotification("Please enter a valid email address", "error");
+        return false;
+      }
+
+      // Password validation
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#.])[A-Za-z\d@$!%*?&#.]{8,}$/;
+      if (!passwordRegex.test(password)) {
+        showNotification("Password must be 8+ characters with uppercase, lowercase, number, and special character", "error");
+        return false;
+      }
+
+      return true;
+    }
+
     async function signup() {
-      const fullName = document.getElementById("signupName").value;
-      const email = document.getElementById("signupEmail").value;
+      const fullName = document.getElementById("signupName").value.trim();
+      const email = document.getElementById("signupEmail").value.trim();
       const password = document.getElementById("signupPassword").value;
+      const signupBtn = document.getElementById("signupBtn");
 
-      const res = await fetch(`${API_URL}/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullName, email, password })
-      });
+      if (!fullName || !email || !password) {
+        showNotification("Please fill in all fields", "error");
+        return;
+      }
 
-      const data = await res.json();
-      showNotification(data.message, data.success ? "success" : "error");
+      if (!validateForm(fullName, email, password)) {
+        return;
+      }
 
-      if (data.success) {
-        setTimeout(() => window.location.href = "signin.html", 1500);
+      // Show loading state
+      signupBtn.textContent = "Creating account...";
+      signupBtn.disabled = true;
+
+      try {
+        const res = await fetch(`${API_URL}/signup`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ fullName, email, password })
+        });
+
+        const data = await res.json();
+        
+        if (data.success) {
+          showNotification(data.message, "success");
+          setTimeout(() => window.location.href = "signin.html", 2000);
+        } else {
+          showNotification(data.message, "error");
+        }
+      } catch (error) {
+        console.error("Signup error:", error);
+        showNotification("Connection error. Please try again.", "error");
+      } finally {
+        signupBtn.textContent = "Sign Up";
+        signupBtn.disabled = false;
       }
     }
+
+    // Allow Enter key to submit
+    document.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        signup();
+      }
+    });
+
+    // Check if user is already logged in
+    document.addEventListener('DOMContentLoaded', function() {
+      const user = localStorage.getItem('wattsonUser');
+      if (user) {
+        window.location.href = 'dashboard.html';
+      }
+    });
   </script>
 </body>
 </html>
